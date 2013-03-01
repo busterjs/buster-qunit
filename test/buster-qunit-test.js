@@ -240,9 +240,10 @@ buster.testCase('buster-qunit', {
                 }
             }
         },
+        
         'async': {
 
-            'start': function() {
+            '//start': function() {
                 // not implemented
                 var qunit = this.qunit;
                 assert.exception(function () {
@@ -250,7 +251,7 @@ buster.testCase('buster-qunit', {
                 });
             },
 
-            'stop': function () {
+            '//stop': function () {
                 // not implemented
                 var qunit = this.qunit;
                 assert.exception(function () {
@@ -258,7 +259,7 @@ buster.testCase('buster-qunit', {
                 });
             },
 
-            'expect': function () {
+            '//expect': function () {
                 // not implemented
                 var qunit = this.qunit;
                 assert.exception(function () {
