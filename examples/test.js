@@ -44,3 +44,71 @@ test("Label option", function() {
 
 });
 
+
+
+module('the-async', {
+/*
+    setup: function() {
+    },
+
+    teardown: function() {
+    }
+*/
+});
+
+
+test("Create / destroy", function() {
+
+    $('#the-node').async({
+    });
+
+    $('#the-node').async('destroy');
+
+});
+
+
+test("Changes label", function() {
+
+    expect(2);
+    stop();
+
+    $('#the-node').async({
+    });
+
+    setTimeout(function () {
+        
+        equal($('#the-node').text(), 'Hello World!');
+
+        $('#the-node').async('destroy');
+        equal($('#the-node').text(), 'The Node Text');
+
+        start();
+
+    }, 2000);
+
+});
+
+
+test("Label option", function() {
+
+    expect(2);
+    stop();
+
+    $('#the-node').async({
+        label: 'Buster.js is awesome!'
+    });
+
+    setTimeout(function () {
+        
+        equal($('#the-node').text(), 'Buster.js is awesome!');
+
+        $('#the-node').async('destroy');
+        equal($('#the-node').text(), 'The Node Text');
+        
+        start();
+
+    }, 2000);
+
+});
+
+
