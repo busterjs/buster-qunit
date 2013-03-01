@@ -32,13 +32,38 @@ buster.testCase('buster-qunit', {
         this.qunit = this.global._buster_qunit_init();
     },
 
-    'wrapTest method is proxying correctly': function () {
-        var proxy = this.qunit.wrapTest;
-        var res = {};
-        var m = this.stub();
-        var proxied = proxy(m, res);
-        proxied();
-        assert(m.calledOn(res));
+    'wrapTest method': {
+
+        'is proxying correctly': function () {
+            var proxy = this.qunit.wrapTest;
+            var proto = {};
+            var m = this.stub();
+            var proxied = proxy(m, proto);
+            var result = proxied();
+            assert(m.calledOn(proto));
+            assert.equals(result, undefined);
+        },
+
+        'supports async': function () {
+            var self = this;
+            var proxy = this.qunit.wrapTest;
+            var proto = {};
+            var m = this.spy(function () {
+                // put the test runner on hold
+                self.qunit.stop();
+            });
+            var proxied = proxy(m, proto);
+            var promise = proxied();
+            var resolve = this.spy(promise, 'resolve');
+            assert(m.calledOn(proto));
+            assert.equals(promise.counter, -1);
+            refute(resolve.called);
+            // trigger the finish of the test
+            this.qunit.start();
+            console.log(promise.counter);
+            assert.equals(promise.counter, 0);
+            assert(resolve.calledOnce);
+        }
     },
 
     '': {
