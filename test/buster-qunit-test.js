@@ -32,8 +32,8 @@ buster.testCase('buster-qunit', {
         this.qunit = this.global._buster_qunit_init();
     },
 
-    'proxy method is proxying correctly': function () {
-        var proxy = this.qunit.proxy;
+    'wrapTest method is proxying correctly': function () {
+        var proxy = this.qunit.wrapTest;
         var res = {};
         var m = this.stub();
         var proxied = proxy(m, res);
@@ -45,16 +45,16 @@ buster.testCase('buster-qunit', {
 
         setUp: function () {
             // mock proxying, so we can check easier
-            this.mockProxy = this.stub(this.qunit, 'proxy', function (f) {
+            this.mockWrapper = this.stub(this.qunit, 'wrapTest', function (f) {
                 if (typeof f == 'function') {
                     f = 'FUNC';
                 }
-                return 'PROXIED[' + f + ']';
+                return 'WRAPPED[' + f + ']';
             });
         },
 
         tearDown: function () {
-            this.mockProxy.restore();
+            this.mockWrapper.restore();
         },
 
         'exposes global': {
@@ -92,7 +92,7 @@ buster.testCase('buster-qunit', {
                 assert.equals(c.setUp, this.qunit.qunitSetUp);
                 assert.equals(c.tearDown, this.qunit.qunitTearDown);
                 assert.keys(c.M, ['test1']);
-                assert.equals(c.M.test1, 'PROXIED[T1]');
+                assert.equals(c.M.test1, 'WRAPPED[T1]');
             },
         
             'with setup and teardown': function () {
@@ -107,9 +107,9 @@ buster.testCase('buster-qunit', {
                 assert.equals(c.setUp, this.qunit.qunitSetUp);
                 assert.equals(c.tearDown, this.qunit.qunitTearDown);
                 assert.keys(c.M, ['setUp', 'tearDown', 'test1']);
-                assert.equals(c.M.setUp, 'PROXIED[SETUP]');
-                assert.equals(c.M.tearDown, 'PROXIED[TEARDOWN]');
-                assert.equals(c.M.test1, 'PROXIED[T1]');
+                assert.equals(c.M.setUp, 'WRAPPED[SETUP]');
+                assert.equals(c.M.tearDown, 'WRAPPED[TEARDOWN]');
+                assert.equals(c.M.test1, 'WRAPPED[T1]');
             },
 
             'without module': function () {
@@ -120,7 +120,7 @@ buster.testCase('buster-qunit', {
                 assert.equals(c.setUp, this.qunit.qunitSetUp);
                 assert.equals(c.tearDown, this.qunit.qunitTearDown);
                 assert.keys(c.nomodule, ['test1']);
-                assert.equals(c.nomodule.test1, 'PROXIED[T1]');
+                assert.equals(c.nomodule.test1, 'WRAPPED[T1]');
             },
 
             'with more tests': function () {
@@ -134,9 +134,9 @@ buster.testCase('buster-qunit', {
                 assert.equals(c.setUp, this.qunit.qunitSetUp);
                 assert.equals(c.tearDown, this.qunit.qunitTearDown);
                 assert.keys(c.M, ['test1', 'test2', 'test3']);
-                assert.equals(c.M.test1, 'PROXIED[T1]');
-                assert.equals(c.M.test2, 'PROXIED[T2]');
-                assert.equals(c.M.test3, 'PROXIED[T3]');
+                assert.equals(c.M.test1, 'WRAPPED[T1]');
+                assert.equals(c.M.test2, 'WRAPPED[T2]');
+                assert.equals(c.M.test3, 'WRAPPED[T3]');
             },
 
             'makes proxied methods': function () {
@@ -151,11 +151,11 @@ buster.testCase('buster-qunit', {
                 g.test('test1', 'T1');
                 g.test('test2', 'T2');
                 var c = this.qunit.testCase;
-                assert.equals(this.mockProxy.callCount, 4);
-                assert.equals(this.mockProxy.args[0], ['SETUP', proto]);
-                assert.equals(this.mockProxy.args[1], ['TEARDOWN', proto]);
-                assert.equals(this.mockProxy.args[2], ['T1', proto]);
-                assert.equals(this.mockProxy.args[3], ['T2', proto]);
+                assert.equals(this.mockWrapper.callCount, 4);
+                assert.equals(this.mockWrapper.args[0], ['SETUP', proto]);
+                assert.equals(this.mockWrapper.args[1], ['TEARDOWN', proto]);
+                assert.equals(this.mockWrapper.args[2], ['T1', proto]);
+                assert.equals(this.mockWrapper.args[3], ['T2', proto]);
             }
              
         },
