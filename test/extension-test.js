@@ -11,9 +11,10 @@ buster.testCase('buster-qunit extension', {
     "adds bundle as framework": function (done) {
         var config = configuration.create();
         var group = config.addGroup("Some tests", {
-            resources: [{ path: "/test.js", content: "//Hey" }],
-            tests: ["/test.js"]
-        });
+            resources: [{path: "/test.js", content: "//Hey" }],
+            tests: ["/test.js"],
+            rootPath: '.'
+        }, '.');
         group.extensions.push(ext.create());
 
         group.resolve().then(done(function (resourceSet) {
